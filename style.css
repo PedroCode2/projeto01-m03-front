@@ -1,0 +1,22 @@
+
+img{
+    width: 300px;
+    height: 300px;
+}
+
+
+.bi-toggle2-off{
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px;
+    color: red;
+    
+}
+
+.bi-toggle2-on{
+    display: flex;
+    justify-content: flex-end;
+    padding: 4px;
+    color: green;
+    
+}
