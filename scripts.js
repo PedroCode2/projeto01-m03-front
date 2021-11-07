@@ -1,24 +1,9 @@
-const lista = document.getElementById('lista');
+const lista = document.getElementById("lista");
 const apiUrl = "http://localhost:3000/jogos";
 let edicao = false;
 let idEdicao = 0;
 
-
-
-function toggle(){
-  
-  let jogado = document.querySelector(".jogado")
-    
-  if(jogado.classList.contains("bi-toggle2-off")){
-      jogado.classList.replace("bi-toggle2-off", "bi-toggle2-on")
-    }else{
-      jogado.classList.replace("bi-toggle2-on", "bi-toggle2-off");
-    }
-    console.log("Deu Certo!!")
-}
-
 // Função para fazer com que a quantidade maxima seja de 0 a 10 para a nota do jogo!!
-
 
 function maxLengthCheck(object) {
   if (object.value.length > object.maxLength)
@@ -38,34 +23,66 @@ function isNumeric(evt) {
 
 //começando a validar a aparição dos itens na tela..
 
-let elementoNome = document.getElementById('nome');
-let elementoImg = document.getElementById('imagem');
-let elementoGen = document.getElementById('genero');
-let elementoNota = document.getElementById('nota');
+let elementoNome = document.getElementById("nome");
+let elementoImg = document.getElementById("imagem");
+let elementoGen = document.getElementById("genero");
+let elementoNota = document.getElementById("nota");
 
 const getJogos = async () => {
   const response = await fetch(apiUrl);
   const jogos = await response.json();
-  jogos.map((jogo) => {
-    lista.insertAdjacentHTML(
-      "beforeend",
-      `
+  jogos.map((jogos) => {
+    if (jogos.jogado === true) {
+      lista.insertAdjacentHTML(
+        "beforeend",
+        `
       <div class="col">
           <div class="card">
-          <img src="${jogo.imagem}"  class="card-img-top" alt="..."width = "300" heigth = "300">
+          <img src="${jogos.imagem}"  class="card-img-top" alt="..."width = "300" heigth = "300">
           <div class="card-body">
-              <h5 class="card-title">${jogo.nome} -Nota: ${jogo.nota}/10</h5> 
-              <span class="badge bg-dark">${jogo.genero}</span>
-              <div> <i class="bi bi-toggle2-off jogado" onclick="toggle()">Jogado</i> </div>
+              <h5 class="card-title">${jogos.nome} -Nota: ${jogos.nota}/10</h5> 
+              <span class="badge bg-dark">${jogos.genero}</span>
+            <div>
+            <select name="Jogado">
+            <option value="Jogado" onchange="jogado('${jogos.id}')">Jogo Jogado</option>
+            <option value="Não Jogado" onchange="jogado('${jogos.id}')">Jogo não Jogado</option>
+            </select>
+            </div>
               <div>
-                  <button class="btn btn-dark" onclick="editJogo('${jogo.id}')">Editar</button>
-                  <button class="btn btn-danger" onclick="deleteJogo('${jogo.id}')">Excluir</button>
+                  <button class="btn btn-dark" onclick="editJogo('${jogos.id}')">Editar</button>
+                  <button class="btn btn-danger" onclick="deleteJogo('${jogos.id}')">Excluir</button>
               </div>
           </div>
           </div>
         </div>
   `
-    );
+      );
+    } else {
+      lista.insertAdjacentHTML(
+        "beforeend",
+        `
+        <div class="col">
+            <div class="card">
+            <img src="${jogos.imagem}"  class="card-img-top" alt="..."width = "300" heigth = "300">
+            <div class="card-body">
+                <h5 class="card-title">${jogos.nome} -Nota: ${jogos.nota}/10</h5> 
+                <span class="badge bg-dark">${jogos.genero}</span>
+                <div>
+                <select name="Jogado">
+                <option value="Não Jogado" onchange="jogado('${jogos.id}')">Jogo não Jogado</option>
+                <option value="Jogado" onchange="jogado('${jogos.id}')">Jogo Jogado</option>
+                </select>
+                </div>
+                <div>
+                    <button class="btn btn-dark" onclick="editJogo('${jogos.id}')">Editar</button>
+                    <button class="btn btn-danger" onclick="deleteJogo('${jogos.id}')">Excluir</button>
+                </div>
+            </div>
+            </div>
+          </div>
+    `
+      );
+    }
   });
 };
 const submitForm = async (event) => {
@@ -126,7 +143,7 @@ const putJogo = async (jogo, id) => {
 const getJogosById = async (id) => {
   const response = await fetch(`${apiUrl}/${id}`);
   return await response.json();
-}
+};
 const deleteJogo = async (id) => {
   const request = new Request(`${apiUrl}/delete/${id}`, {
     method: "DELETE",
@@ -154,11 +171,32 @@ const editJogo = async (id) => {
 };
 
 const clearFields = () => {
-  nome.value = '';
-  imagem.value = '';
-  genero.value = '';
-  nota.value = ''
-}
+  nome.value = "";
+  imagem.value = "";
+  genero.value = "";
+  nota.value = "";
+};
 
+const jogado = async (id) => {
+  let ok = true;
+  const request = new Request(`${apiUrl}/${ok}/${id}`, {
+    method: "PUT",
+  });
+  const response = await fetch(request);
+  const result = await response.json();
+  lista.innerHTML = "";
+  getJogos();
+};
 
-getJogos()
+const naojogado = async (id) => {
+  let ok = false;
+  const request = new Request(`${apiUrl}/${ok}/${id}`, {
+    method: "PUT",
+  });
+  const response = await fetch(request);
+  const result = await response.json();
+  lista.innerHTML = "";
+  getJogos();
+};
+
+getJogos();

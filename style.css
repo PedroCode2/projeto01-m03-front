@@ -5,18 +5,9 @@ img{
 }
 
 
-.bi-toggle2-off{
+#opcao{
+    border: none;
     display: flex;
-    justify-content: flex-end;
-    padding: 4px;
-    color: red;
-    
-}
-
-.bi-toggle2-on{
-    display: flex;
-    justify-content: flex-end;
-    padding: 4px;
-    color: green;
+    justify-content: center;
     
 }
